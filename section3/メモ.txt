@@ -1,0 +1,5 @@
+コンパイラの設定一覧
+https://www.typescriptlang.org/docs/handbook/compiler-options.html
+
+
+compiler.js.map: sourceMapの関係で生成.Javascriptファイルからtypescriptを生み出すためのもの

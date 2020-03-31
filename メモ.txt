@@ -1,0 +1,10 @@
+es6 compat table: E6でしか使えない機能
+
+interface: classと違い複数継承できるっぽい.
+typeとinterfaceは &でインターセクション型を定義できる
+instance ofはあくまでclassのみに使用可能。インターフェイスには使えない(コンパイル時に消える)
+
+
+119 コールバック関数(this.clickEventHandler)の中でthisが使われると、そのdiv要素自体をさしている。Food classではない！
+ので、bindを使う。
+reduceを使って、アクティブの合計値を産出！
