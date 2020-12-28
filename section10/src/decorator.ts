@@ -1,23 +1,18 @@
 function Logging(message: string) {
   console.log('Logging Factory');
-  // デコレーターを返す関数！(引数を扱うため)
   return function (constructor: Function) {
     console.log(message);
     console.log(constructor);
   }
 }
-
 function Component(template: string, selector: string) {
   console.log('Component Factory');
-  // ↓const instance = new constructor()の箇所では、constructorはただのFunctionなので、
-  // こうして{ new() }として「オブジェクトだよ」と教える事でエラーを防いでいる
   return function <T extends { new(...args: any[]): { name: string } }>(constructor: T) {
     return class extends constructor {
       constructor(...args: any[]) {
         super(...args);
         console.log('Component');
         const mountedElement = document.querySelector(selector);
-        // ↓name = 'Quill'を使うためにこうしている
         const instance = new constructor();
         if (mountedElement) {
           mountedElement.innerHTML = template;
@@ -39,8 +34,6 @@ function MethodLogging(target: any, propertyKey: string, descriptor: PropertyDes
   console.log(propertyKey);
   console.log(descriptor);
 }
-
-
 function enumerable(isEnumerable: boolean) {
   return function (_target: any, _propertyKey: string, _descriptor: PropertyDescriptor) {
     return {

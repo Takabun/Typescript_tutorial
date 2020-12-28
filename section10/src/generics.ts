@@ -23,7 +23,6 @@ stringLightDatabase.add('Grape');
 stringLightDatabase.remove('Banana');
 console.log(stringLightDatabase.get());
 
-
 interface Todo {
   title: string;
   text: string;
@@ -40,26 +39,3 @@ fetchData.then(data => {
   data.toUpperCase();
 })
 const vegetables: Array<string> = ['Tomato', 'Broccoli', 'Asparagus'];
-
-// 99 デフォルトの型パラメータ
-interface ResponseData<T extends { message: string } = any> {
-  data: T;
-  status: number;
-}
-let genericsTmp2: ResponseData;
-interface Vegetables {
-  readonly tomato: string;
-  pumpkin?: string;
-}
-let genericsTmp3: keyof Vegetables;
-
-
-type MappedTypes = {
-  -readonly [P in keyof Vegetables]-?: string
-}
-
-// 101 Conditional
-type ConditionalTypes = 'tomato' extends string ? number : boolean;
-type ConditionalTypesInfer = { tomato: string } extends { tomato: infer R } ? R : boolean;
-type DistributiveConditionalTypes<T> = T extends 'tomato' ? number : boolean;
-let genericsTmp4: DistributiveConditionalTypes<'tomato' | 'pumpkin'>

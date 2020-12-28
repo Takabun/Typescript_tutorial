@@ -1,3 +1,6 @@
+29: unknows: any型よりも厳格。使うときは、"typeof"で補足しよう
+
+
 es6 compat table: E6でしか使えない機能
 
 interface: classと違い複数継承できるっぽい.
@@ -5,6 +8,212 @@ typeとinterfaceは &でインターセクション型を定義できる
 instance ofはあくまでclassのみに使用可能。インターフェイスには使えない(コンパイル時に消える)
 
 
+49 thisの場所によって意味が変わる
+最後の方: アロー関数だとthisが定義時に決まる。(普通は実行時)
+
+
+50: this: Personで、型を丸ごと渡す
+
+51 
+  public：書かなくても変わらない。
+  private：そもそも外からアクセス出来ない。quill.ageやquill.incrementAgeはダメ
+52
+  readonly: そのクラスの中からでも書き換えられない
+54
+  extends 
+55
+  protedced: 継承先でそのプロパティを使いたい時に、privateではなくprotedtedを使う！
+56
+  get, set : そのクラスの外からアクセスさせるっぽい(privateのものに対しても使える)
+57
+  static：インスタンスを作らなくても使える (Person.species="人間")
+58
+  abstract: 継承のみに使える (abstract explainjob()を大元のクラスに書く)
+  継承先では必ずexplainjob()を実装する必要がある！(Goのインターフェイスみたい)
+59
+  private constructor: シングルトンパターン(←デザインパターンの1つ)。1つのクラスから1つのインスタンスしか作らせない時に使う。
+  例えば、1つの教室にTeacherは1人しか存在しないよ。
+  private static instance: Teacher;
+  static getInstance() { // staticは、インスタンスを作らなくても使えるよね
+    if (Teacher.instance) return Teacher.instance;
+    Teacher.instance = new Teacher('Quill', 38, 'Math');
+    return Teacher.instance;
+  }
+
+
+62: interfaceのメリット:
+Objectにしか使われない事がわかっているので、可読性が高まる(typeエイリアスは全てに使われる)
+union型とかnull型を使いたい場合はtypeを使う
+
+
+64
+  Class Developer implements Human
+  constructorの中身はpublicかreadonlyか、何か指定！
+  interface内のメソッドは、必ず実装せねばならない(この点は、Goのインターフェイスと同様)
+  implements(インターフェイス)とextends(クラス)の違い：implementsは複数継承できる
+
+
+67
+Interface Human extends Nameable
+imterfaceの中で更にinterfaceを継承する時にはextendsを使うっぽい！
+
+
+68 インターフェイスで『関数の』型を表現する(けど、可読性的に基本的はtypeを使おう)
+type addFunc = (num1: number, num2: number) => number;
+interface addFunc {
+   (num1: number, num2: number): number;
+}
+
+73
+①
+if (typeof x === ‘string’)
+②
+Type NomadWorker = Engineer | Blogger  (Engineerの中にroleがある)
+If (‘role’ in nomadWorker) {
+③
+type Pet = Dog | Bird;
+If (per instanceof Bird) {
+
+74
+  タグ付きunion: デザインパターン
+  タグをつける事で、73(type guard)をイイ感じに使う
+
+
+75 型アサーション
+<HTMLInputElement>と前半で言い切る or 最後に as HTMLInputElement
+
+
+77 インデックスシグネチャ
+Interface Designer {
+Name: string;
+[index: string]: string;
+}
+
+Const designer: Designer = {
+Name: ‘Quill’;
+Kkekeke: ‘gregr ’自由に追加できる
+}
+
+
+79
+! びっくりマーク：それは、必ず存在するよと言い切ってしまう。dowmloadedData.user!.name
+?でも機能する。Optional Chaining  dowmloadedData.user?.name
+
+80
+  nullish Coalesing: 
+  const userData = downloadedData.user ?? 'no-user';
+
+81 Lookup型。型を知りたい時はDownloadedData.idではムリ
+  type id = DownloadedData["id"]
+
+
+96
+  Classにジェネリクスを使う際は、class LightDatabase<T> {}として、()は付けないっぽい！
+  また、constructorも無い
+
+100 Mapped Types  ムズい！！ 
+101 Conditional Types ムズい！型のif文(三行演算子)。 infer R
+
+
+98
+  PartialやReadonly: Utilityタイプの1つ。特にダウンロードしなくても、TSにデフォルトで内蔵されているもの。
+  type Todoable = Partial<Todo>とすれば、Todoの中のプロパティが全て?になったものとなる
+  <>が付いているので、ジェネリクスを学んだこのタイミングで紹介された。
+
+  TSで。「文字列の配列」を表現するには、string[]とArrray<string> の2種類がある
+
+104
+  Classは、本質的にはconstructorの等意構文！(つまりFunction型)
+  @Loggingは、Classの上につける場合、インスタンスの生成時ではなく、Classの定義時に実行されている！
+
+
+105 デコレーターファクトリー：
+  デコレーターは普通、引数を取れない。ので、引数を扱えるようにするには『デコレーターを返す関数』を作る！
+
+
+105
+  まだ、「デコレーターの使い道」に付いて曖昧！→実際、使い方には工夫が要る→ 結局、@Componentsみたいに使うっぽい。
+
+  @Componentの中にClassの引数(name)を渡す時
+  return function (constructor: {new():{name: string}}
+  ~~~
+  Const instance = new constructor();
+  でインスタンス生成。(上段new()~~という予約語の記載がないと、typescriptはこのconstructonrが()が普通の関数なのかコンストラクタなのか判別が出来ず、newできない)
+
+
+
+108  プロパティデコレーター
+  関数の直下にあるprotorypeオブジェクト: メモリを効率化するために共通化している
+  Function PropertyLogging(target: any, propertyKey:string ) {}
+  で、console.log(target)で取得可能
+  *propertyKey: nameなどのプロパティが入る
+
+
+
+109 メソッドデコレーター
+  Function MethodLogging(target: any, propertyKey:string , descriptor:
+  PropertyDescriptor) {}
+  descriptor: value?やget?等の集合のオブジェクト
+
+
 119 コールバック関数(this.clickEventHandler)の中でthisが使われると、そのdiv要素自体をさしている。Food classではない！
 ので、bindを使う。
 reduceを使って、アクティブの合計値を産出！
+
+125 
+ クラスの中でシングルトンパターンを使う事で、クラスを一度のみ生成させる。
+
+
+129
+export とimport
+
+
+131
+exprort → import {keke} from “kudu.js”; 名前つきエクスポートという
+export default  → import keke from “kudu.js”;
+
+132
+CORSエラーが出た原因：type="modules"を読み込む際には、同じサーバーから、HTTP通信でないとダメ
+
+
+133
+同じモジュールを2回importしても、最初の1回のみ実行される！
+
+
+
+134 (webpack)
+webpackを使うメリット:
+  ①モダンブラウザ対応
+  ②HTTP通信の一括化 (JSの数が1個とか2個とかなら意味ないが、100個とかになると露骨に影響する)
+  
+module.exports= {
+} Node.jsのエクスポート文
+
+
+137 ts-loaderを使ってTSからダイレクトにbundle.jsを使う。
+そのためにmodule: {rules: [{……}]}
+Resolve: {extensions} : 拡張子をつける。(これによってjsとtsを交通整理)
+
+138
+  webpackを入れたら、tscongig.json内のうち幾らかの記載は無視されるようになる。outDirなど
+
+
+144 
+  import axios from 'axios'; tsconfig.json内に"moduleResolution": "node" を記載すれば読み込める
+  もし自分がライブラリを作って公開したいとか思ったら、declarationをtrueにすると、自動でビルド時に.d.tsを作ってくれる
+
+145
+  lodashを使いたいが、普通は型定義ファイルが無い！どうする？
+  ① @typesディレクトリに入れる！(ここには、誰かが既に作ってくれた型定義ファイルが入る)
+    npm install --save-dev @types/lodash
+    GitHubのDefinitelyTypedリポジトリ：このようなファイルのHub。誰でもコミット可能
+    ↑ここまでで殆ど解決可能
+
+
+150
+  Axiosの型をdeclareしている理由：「どこかで使われる型ではあるが、実態としてココで持つ訳には行かない」
+
+
+164 node.jsとtsを共存させる
+①import express = require('express')
+②esModuleInterop:trueにする → Babel等とも共存できるように

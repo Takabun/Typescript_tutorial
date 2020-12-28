@@ -29,6 +29,8 @@ function toUpperCase(x: string | number): string | number {
   return x;
 }
 
+
+
 // 83 関数型のオーバーロードの箇所
 interface TmpFunc {
   (x: string): number;
