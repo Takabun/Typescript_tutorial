@@ -216,4 +216,15 @@ Resolve: {extensions} : 拡張子をつける。(これによってjsとtsを交
 
 164 node.jsとtsを共存させる
 ①import express = require('express')
+　→import express from "express"とする！(コンパイル時に、requireになる)
 ②esModuleInterop:trueにする → Babel等とも共存できるように
+
+166
+  TSでimport/exportで書かれた文は、Node.jsへコンパイルされた時はexport.defaultと、○◯.defaultとなる
+  (8:59~) この2つの、どちらかの書き方！
+    ①import * as express from 'express'
+    ②import express = require('express')
+  →ずっとこの書き方できたけど、問題が発生！TSは②の書き方できたが、babelはずっと①の書き方で来ていた！
+  →それを解決するためにesModuleInterop! 次の章へ
+
+169: VSCodeの右クリックを使って、ReqやResの型を把握できる
