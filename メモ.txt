@@ -16,20 +16,38 @@ instance ofはあくまでclassのみに使用可能。インターフェイス�
 
 51 
   public：書かなくても変わらない。
-  private：そもそも外からアクセス出来ない。quill.ageやquill.incrementAgeはダメ
+  private：そもそも外からアクセス出来ない。quill.age = 47 はだめ
+  quill.incrementAge()メソッドを通じて外から値を書き換える事は可能！
+
+
 52
   readonly: そのクラスの中からでも書き換えられない
+
 54
-  extends 
+  extends (継承)
+  interface, abstractとの違い
+  ①person.greetingのように、親のメソッドを再定義せず使用できる
+    constructor()をつけるにはsuper()が必要(それによりプロパティを初期化)
+    メソッドは書かなくてもよい & 上書きも可能
+  ②interfaceは、複数個継承できる  https://note.com/bkc_1973/n/n1443eb31a82f
+  ③extendsとinterfaceの根本の違いはココ。「中身まで指定する」のか「何をやるかの上部(会計bill)」なのか
+    https://qiita.com/yoshinori_hisakawa/items/cc094bef1caa011cb739
+
 55
   protedced: 継承先でそのプロパティを使いたい時に、privateではなくprotedtedを使う！
+
 56
   get, set : そのクラスの外からアクセスさせるっぽい(privateのものに対しても使える)
 57
   static：インスタンスを作らなくても使える (Person.species="人間")
+
 58
-  abstract: 継承のみに使える (abstract explainjob()を大元のクラスに書く)
-  継承先では必ずexplainjob()を実装する必要がある！(Goのインターフェイスみたい)
+  abstract: 継承のみに使える (abstract explainjob()を大元のクラスに書く。
+  nameやageと違い、プロパティの名前(_subjectや_jobなど)はClassによって違う！)
+  継承先では必ずexplainjob()を実装する必要がある！(インターフェイスみたい)
+
+  継承との違いは、54を参照
+
 59
   private constructor: シングルトンパターン(←デザインパターンの1つ)。1つのクラスから1つのインスタンスしか作らせない時に使う。
   例えば、1つの教室にTeacherは1人しか存在しないよ。
@@ -42,8 +60,10 @@ instance ofはあくまでclassのみに使用可能。インターフェイス�
 
 
 62: interfaceのメリット:
-Objectにしか使われない事がわかっているので、可読性が高まる(typeエイリアスは全てに使われる)
-union型とかnull型を使いたい場合はtypeを使う
+  Objectにしか使われない事がわかっているので、可読性が高まる(typeエイリアスは全てに使われる)
+  union型とかnull型を使いたい場合はtypeを使う
+
+  継承との違いは、54を参照
 
 
 64
@@ -111,8 +131,17 @@ Kkekeke: ‘gregr ’自由に追加できる
   Classにジェネリクスを使う際は、class LightDatabase<T> {}として、()は付けないっぽい！
   また、constructorも無い
 
-100 Mapped Types  ムズい！！ 
-101 Conditional Types ムズい！型のif文(三行演算子)。 infer R
+100 Mapped Types
+  interface Vegetables {
+    tomato: string;
+    pumpkin: string;
+  }
+  [P in keyof Vegetables]: string
+
+
+101 Conditional Types ： 型のif文(三行演算子) 
+  infer R: 型のanyみたいなもの。ここでは推論してstringaaa型になる
+  type ConditionalTypesInfer = { tomato: stringaaa } extends { tomato: infer R } ? R : boolean;
 
 
 98
